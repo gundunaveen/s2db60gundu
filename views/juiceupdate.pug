@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  h1= title
+
+  if (toShow == null)
+    h2 No instance to update
+  else
+    - let juiceid = toShow._id
+    - let juiceItemname = toShow.Itemname
+    - let juiceQuantity = toShow.Quantity
+    - let juiceprice = toShow.price
+  
+    div.row(class='mb-2')
+      div.mr-1 ID is
+      div #{juiceid}
+    - let actionid = "/resource/juice/" + juiceid
+    form(id='juiceForm', action= actionid, method="PUT")
+      div.form-group
+          label.juiceAttr(for='type') juice Itemname
+          input#Itemname(type='text', name='type', value= Itemname )
+      div.form-group
+          label.juiceAttr(for='price') juice Quantity
+          input#Quantity(type='number', name='price', value= Quantity )
+      div.form-group
+          label.juiceAttr(for='flavor') juicey price
+          input#price(type='text', name='flavor', value= price )
+      input(type="submit")
+
+  script.
+    document.forms['juiceForm'].addEventListener('submit', (event) => {
+      event.preventDefault();
+      console.log(event.target)
+      // TODO do something here to show user that form is being submitted
+      fetch(event.target.action, {
+        method: 'PUT',
+        body: new URLSearchParams(new FormData(event.target)) // event.target is the form
+      }).then((resp) => {
+        return resp.json(); // or resp.text() or whatever the server sends
+      }).then((body) => {
+        alert("Update failed Syntax Error :Unexpected token V in JSON at position 10")
+        // TODO handle body
+      }).catch((error) => {
+        // TODO handle error
+        alert("Update failed " + error )
+      });
+    });
